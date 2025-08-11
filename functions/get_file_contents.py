@@ -2,7 +2,7 @@ import os
 from config import MAXCHARS
 
 #%% get_file_content function
-def get_file_content(working_directory, file_path):
+def get_file_content(working_directory: str, file_path: str) -> str:
 
     # Get absolute paths
     abs_working_dir = os.path.abspath(working_directory)
