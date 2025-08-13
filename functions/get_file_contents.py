@@ -3,7 +3,7 @@ from config import MAXCHARS
 from google.genai import types
 
 #%% get_file_content function
-def get_file_content(working_directory: str, file_path: str) -> str:
+def get_file_contents(working_directory: str, file_path: str) -> str:
 
     # Get absolute paths
     abs_working_dir = os.path.abspath(working_directory)
@@ -39,7 +39,7 @@ schema_get_file_contents = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "file": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
                 description="The file to get contents from, relative to the working directory. If not provided, return contents of file in the working directory itself.",
             ),
