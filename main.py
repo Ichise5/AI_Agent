@@ -7,7 +7,7 @@ from google.genai import types
 
 
 from prompts import system_prompt
-from config import working_directory, MAXITER
+from config import WORKING_DIRECTORY, MAXITER, MODEL
 
 from functions.get_files_info import schema_get_files_info
 from functions.get_file_contents import schema_get_file_contents
@@ -66,32 +66,45 @@ def main():
     #print("type:", type(available_functions))
     #print("type tools:", type([available_functions]))
 
+    for IDX in range(MAXITER):
+        try:
+            response = client.models.generate_content(
+            model=MODEL,
+            contents=messages,
+            config=configuration,
+            )
+        except Exception as e:
+            print(f"Error occured when obtaining response from model. Followin the error:\n{e}")
 
-    response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    contents=messages,
-    config=configuration,
-    )
+        if response.candidates:
+            for candidate in response.candidates:
+                messages.append(candidate.content)
 
-    function_call = response.function_calls
-    if function_call:
-        for function_call_part in function_call:
-            if function_call_part:
-                #print(f"Calling function: {function_call_part.name}({function_call_part.args})")
-                function_call_result = call_function(function_call_part, verbose=params["verbose"])
-    else:
-        print(response.text)
-    
-    if params["verbose"]:
-        used_tokens(response.usage_metadata, user_prompt)
+        function_call = response.function_calls
+        if function_call:
+            for function_call_part in function_call:
+                if function_call_part:
+                    #print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+                    function_call_result = call_function(function_call_part, verbose=params["verbose"])
+        else:
+            print("Final response:")
+            print(response.text)
+            break
+        
 
-    if function_call_result.parts[0].function_response.response:
         if params["verbose"]:
-            print(f"-> {function_call_result.parts[0].function_response.response}")
-    else:
-        raise Exception(f"""called function "{function_call_part.name}"didn't return anything""")
+            used_tokens(response.usage_metadata, user_prompt)
 
+        if function_call_result.parts[0].function_response.response:
+            messages.append(types.Content(parts=function_call_result.parts, role="user"))
+            if params["verbose"]:
+                print(f"-> {function_call_result.parts[0].function_response.response}")
+                
+        else:
+            raise Exception(f"""called function "{function_call_part.name}"didn't return anything""")
 
+    if IDX == MAXITER-1:
+         print(f"Maximum iterations ({MAXITER}) reached.")
 
 def used_tokens(metadata, user_prompt: str) -> None:
     print(f"User prompt: {user_prompt}")
@@ -114,13 +127,13 @@ def call_function(function_call_part, verbose=False):
 
     match function_call_part.name:
         case "get_files_info":
-            function_result = get_files_info(working_directory, **function_call_part.args)
+            function_result = get_files_info(WORKING_DIRECTORY, **function_call_part.args)
         case "get_file_contents":
-            function_result = get_file_contents(working_directory, **function_call_part.args)
+            function_result = get_file_contents(WORKING_DIRECTORY, **function_call_part.args)
         case "run_python_file":
-            function_result = run_python_file(working_directory, **function_call_part.args)
+            function_result = run_python_file(WORKING_DIRECTORY, **function_call_part.args)
         case "write_file":
-            function_result = write_file(working_directory, **function_call_part.args)
+            function_result = write_file(WORKING_DIRECTORY, **function_call_part.args)
         case _:
             return types.Content(
                 role="tool",
@@ -146,3 +159,5 @@ def call_function(function_call_part, verbose=False):
 
 if __name__ == "__main__":
     main()
+
+# %%
