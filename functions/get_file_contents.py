@@ -35,7 +35,7 @@ def get_file_content(working_directory: str, file_path: str) -> str:
 
 schema_get_file_contents = types.FunctionDeclaration(
     name="get_file_contents",
-    description="Lists contents of a file in the specified directory up to limiting amount of characters which will be denoted, constrained to the working directory.",
+    description=f"Lists contents of a file in the specified directory up to limiting amount of characters to {MAXCHARS} which will be denoted, constrained to the working directory.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
@@ -44,5 +44,6 @@ schema_get_file_contents = types.FunctionDeclaration(
                 description="The file to get contents from, relative to the working directory. If not provided, return contents of file in the working directory itself.",
             ),
         },
+        required=["file_path"],
     ),
 )
