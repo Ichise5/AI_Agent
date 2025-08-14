@@ -1,5 +1,5 @@
 MAXCHARS = 10000
-MAXITER = 20
+MAXITER = 50
 MODEL = 'gemini-2.5-flash' # original model gemini-2.0-flash-001
 WORKING_DIRECTORY = "functions"
 

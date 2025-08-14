@@ -1,6 +1,6 @@
 import os
 from google.genai import types
-from functions.utils import *
+from functions.utils import get_validated_absolute_path
 
 # from utils import get_validated_absolute_path
 

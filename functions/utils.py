@@ -5,7 +5,7 @@ def get_validated_absolute_path(
     working_directory: str, file_path: str, is_dir: bool
 ) -> str:
     """
-    Validates a relative path and converts it to an absolute path within the working directory.
+    Validates a relative path and converts it to an absolute path.
     Raises ValueError if the path is outside the working directory.
     """
     abs_working_dir = os.path.abspath(working_directory)

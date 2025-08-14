@@ -13,11 +13,15 @@ from functions.get_files_info import schema_get_files_info
 from functions.get_file_contents import schema_get_file_contents
 from functions.write_file import schema_write_file
 from functions.run_python import schema_run_python_file
+from functions.delete_file import schema_delete_file
+from functions.format_and_lint import schema_format_and_lint
 
 from functions.get_files_info import get_files_info
 from functions.get_file_contents import get_file_contents
 from functions.write_file import write_file
 from functions.run_python import run_python_file
+from functions.delete_file import delete_file
+from functions.format_and_lint import format_and_lint_file
 
 
 
@@ -49,6 +53,8 @@ def main():
             schema_get_file_contents,
             schema_run_python_file,
             schema_write_file,
+            schema_delete_file,
+            schema_format_and_lint,
 
         ]
     )
@@ -134,6 +140,10 @@ def call_function(function_call_part, verbose=False):
             function_result = run_python_file(WORKING_DIRECTORY, **function_call_part.args)
         case "write_file":
             function_result = write_file(WORKING_DIRECTORY, **function_call_part.args)
+        case "delete_file":
+            function_result = delete_file(WORKING_DIRECTORY, **function_call_part.args)
+        case "format_and_lint_file":
+            function_result = format_and_lint_file(WORKING_DIRECTORY, **function_call_part.args)    
         case _:
             return types.Content(
                 role="tool",
