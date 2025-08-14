@@ -6,7 +6,7 @@ from functions.utils import get_validated_absolute_path
 #%% run_python_file function
 def run_python_file(working_directory: str, file_path: str, args=[]) -> str:
     try:
-        abs_file_path = get_validated_absolute_path(working_directory, file_path)
+        abs_file_path = get_validated_absolute_path(working_directory, file_path, is_dir=False)
     except ValueError as e:
         return str(e)
 

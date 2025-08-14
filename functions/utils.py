@@ -5,10 +5,11 @@ def get_validated_absolute_path(working_directory: str, file_path: str, is_dir: 
     Validates a relative path and converts it to an absolute path within the working directory.
     Raises ValueError if the path is outside the working directory.
     """
+    abs_working_dir = os.path.abspath(working_directory)
     abs_path = os.path.abspath(os.path.join(working_directory, file_path))
     
     # Ensure the path is within the working directory
-    if not abs_path.startswith(working_directory):
+    if not abs_path.startswith(abs_working_dir):
         raise ValueError(f"Attempted to access path outside working directory: {file_path}")
 
     # Basic check for existence and type (file/directory)
