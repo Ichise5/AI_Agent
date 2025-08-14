@@ -1,20 +1,15 @@
 import os
 import subprocess
 from google.genai import types
+from functions.utils import get_validated_absolute_path
 
 #%% run_python_file function
 def run_python_file(working_directory: str, file_path: str, args=[]) -> str:
-    # Get absolute paths
-    abs_working_dir = os.path.abspath(working_directory)
-    abs_file_path = os.path.abspath(os.path.join(working_directory, file_path))
+    try:
+        abs_file_path = get_validated_absolute_path(working_directory, file_path)
+    except ValueError as e:
+        return str(e)
 
-    # Check if the target file path is in the working directory
-    if not abs_file_path.startswith(abs_working_dir):
-        return f'Error: Cannot execute "{file_path}" as it is outside the permitted working directory'
-    
-    if not os.path.exists(abs_file_path):
-        return f'Error: File "{file_path}" not found.'
-    
     if not file_path.endswith("py"):
         return f'Error: "{file_path}" is not a Python file.'
 
@@ -27,7 +22,7 @@ def run_python_file(working_directory: str, file_path: str, args=[]) -> str:
             capture_output=True,
             text=True,
             timeout=30,
-            cwd=abs_working_dir,
+            cwd=os.path.abspath(working_directory),
         )
         output = []
         if result.stdout:

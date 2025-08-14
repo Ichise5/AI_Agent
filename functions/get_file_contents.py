@@ -1,21 +1,14 @@
 import os
 from config import MAXCHARS
 from google.genai import types
+from functions.utils import get_validated_absolute_path
 
 #%% get_file_content function
 def get_file_contents(working_directory: str, file_path: str) -> str:
-
-    # Get absolute paths
-    abs_working_dir = os.path.abspath(working_directory)
-    abs_file_path = os.path.abspath(os.path.join(working_directory, file_path))
-
-    # Check if the target file path is in the working directory
-    if not abs_file_path.startswith(abs_working_dir):
-        return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
-    
-    # Check if the target file is a file
-    if not os.path.isfile(abs_file_path):
-        return f'Error: File not found or is not a regular file: "{file_path}"'
+    try:
+        abs_file_path = get_validated_absolute_path(working_directory, file_path)
+    except ValueError as e:
+        return str(e)
     
     # Read the contents of the file
     try:

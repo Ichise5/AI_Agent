@@ -1,20 +1,14 @@
 import os
 from google.genai import types
+from functions.utils import *
+#from utils import get_validated_absolute_path
 
 #%% get_files_info function
 def get_files_info(working_directory: str, directory:str = ".") -> str:
-
-    # Get absolute paths
-    abs_working_dir = os.path.abspath(working_directory)
-    target_dir = os.path.abspath(os.path.join(working_directory, directory))
-
-    # Check if the target directory is in the working directory
-    if not target_dir.startswith(abs_working_dir):
-        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
-    
-    # Check if the target directory is a directory
-    if not os.path.isdir(target_dir):
-        return f'Error: "{directory}" is not a directory'
+    try:
+        target_dir = get_validated_absolute_path(working_directory, directory, is_dir=True)
+    except ValueError as e:
+        return str(e)
     
     # Get information about the individual files and directories in the target directory
     try:
