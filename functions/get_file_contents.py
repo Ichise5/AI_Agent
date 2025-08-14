@@ -3,27 +3,29 @@ from config import MAXCHARS
 from google.genai import types
 from functions.utils import get_validated_absolute_path
 
-#%% get_file_content function
+
+# %% get_file_content function
 def get_file_contents(working_directory: str, file_path: str) -> str:
     try:
-        abs_file_path = get_validated_absolute_path(working_directory, file_path, is_dir=False)
+        abs_file_path = get_validated_absolute_path(
+            working_directory, file_path, is_dir=False
+        )
     except ValueError as e:
         return str(e)
-    
+
     # Read the contents of the file
     try:
         with open(abs_file_path, "r") as f:
             content = f.read(MAXCHARS)
             # If the file is bigger than MAXCHARS return add a notation to the end
             if os.path.getsize(abs_file_path) > MAXCHARS:
-                content += (
-                    f'[...File "{file_path}" truncated at {MAXCHARS} characters]'
-                )
+                content += f'[...File "{file_path}" truncated at {MAXCHARS} characters]'
         return content
-    #If anything goes wrong return error
+    # If anything goes wrong return error
     except Exception as e:
         return f'Error reading file "{file_path}": {e}'
-    
+
+
 # %%
 
 schema_get_file_contents = types.FunctionDeclaration(

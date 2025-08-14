@@ -3,10 +3,13 @@ import subprocess
 from google.genai import types
 from functions.utils import get_validated_absolute_path
 
-#%% run_python_file function
+
+# %% run_python_file function
 def run_python_file(working_directory: str, file_path: str, args=[]) -> str:
     try:
-        abs_file_path = get_validated_absolute_path(working_directory, file_path, is_dir=False)
+        abs_file_path = get_validated_absolute_path(
+            working_directory, file_path, is_dir=False
+        )
     except ValueError as e:
         return str(e)
 
@@ -41,6 +44,7 @@ def run_python_file(working_directory: str, file_path: str, args=[]) -> str:
     else:
         return "No output produced."
 
+
 # %%
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
@@ -52,7 +56,7 @@ schema_run_python_file = types.FunctionDeclaration(
                 type=types.Type.STRING,
                 description="The path to the file to be run, relative to the working directory.",
             ),
-          "args": types.Schema(
+            "args": types.Schema(
                 type=types.Type.ARRAY,
                 items=types.Schema(
                     type=types.Type.STRING,

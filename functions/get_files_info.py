@@ -1,15 +1,19 @@
 import os
 from google.genai import types
 from functions.utils import *
-#from utils import get_validated_absolute_path
 
-#%% get_files_info function
-def get_files_info(working_directory: str, directory:str = ".") -> str:
+# from utils import get_validated_absolute_path
+
+
+# %% get_files_info function
+def get_files_info(working_directory: str, directory: str = ".") -> str:
     try:
-        target_dir = get_validated_absolute_path(working_directory, directory, is_dir=True)
+        target_dir = get_validated_absolute_path(
+            working_directory, directory, is_dir=True
+        )
     except ValueError as e:
         return str(e)
-    
+
     # Get information about the individual files and directories in the target directory
     try:
         files_info = []
@@ -23,7 +27,8 @@ def get_files_info(working_directory: str, directory:str = ".") -> str:
     # if file reading fails return an error
     except Exception as e:
         return f"Error listing files: {e}"
-    
+
+
 # %%
 
 schema_get_files_info = types.FunctionDeclaration(

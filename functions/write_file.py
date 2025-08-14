@@ -3,20 +3,24 @@ from google.genai import types
 from functions.utils import get_validated_absolute_path
 
 
-#%% write_file function
-def write_file(working_directory:str , file_path: str, content: str) -> str:
+# %% write_file function
+def write_file(working_directory: str, file_path: str, content: str) -> str:
     try:
-        abs_file_path = get_validated_absolute_path(working_directory, file_path, is_dir=False)
+        abs_file_path = get_validated_absolute_path(
+            working_directory, file_path, is_dir=False
+        )
     except ValueError as e:
         return str(e)
-    
+
     try:
-        with open(abs_file_path,'w') as file:
+        with open(abs_file_path, "w") as file:
             file.write(content)
     except Exception as e:
         return f'Error writing file "{file_path}": {e}'
-    
+
     return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
+
+
 # %%
 
 schema_write_file = types.FunctionDeclaration(
